@@ -342,7 +342,7 @@ while GAME_ON:  # Loop del Juego
                             pygame.quit()  # Detiene pygame
                             sys.exit()  # Detiene el script
                         if event.type == KEYDOWN:
-                            if event.key == K_ESCAPE:
+                            if event.key == K_k:
                                 lose = False
                 display.blit( perdiste_image, (0,0) )
                 pygame.display.update()
