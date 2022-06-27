@@ -42,6 +42,9 @@ forest_bg = pygame.image.load('data/images/forest.png')
 flag_image1 = pygame.image.load( 'data/images/flag1.png' )
 flag_image2 = pygame.image.load( 'data/images/flag2.png' )
 
+plant = pygame.image.load( 'data/images/plant.png' )
+flower = pygame.image.load( 'data/images/flower.png' )
+
 perdiste_image = pygame.image.load( 'data/images/perdiste.png' )
 ganaste_image = pygame.image.load( 'data/images/ganaste.png' )
 
@@ -75,7 +78,11 @@ def load_map(path):
         game_map.append(list(row))
     return game_map
 
+
 game_map = load_map('data/maps/map')
+
+rows = len(game_map)
+columns = len(game_map[0]) 
 
 global animation_frames
 animation_frames = {}
@@ -198,7 +205,11 @@ while GAME_ON:  # Loop del Juego
                 flag_pos = x*TILE_SIZE
                 #print( x*TILE_SIZE-scroll[0] )
                 display.blit(flag_image2, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]))
-            if tile != '0' and tile != '4' and tile != '3':
+            if tile == '5':
+                display.blit( plant, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]) )
+            if tile == '6':
+                display.blit( flower, (x*TILE_SIZE-scroll[0], y*TILE_SIZE-scroll[1]) )
+            if tile != '0' and tile != '4' and tile != '3' and tile != '5' and tile != '6':
                 tile_rects.append(pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE))
             x += 1
         y += 1
@@ -260,25 +271,23 @@ while GAME_ON:  # Loop del Juego
         player_action, player_frame = change_action(player_action, player_frame,'jump')
         player_flip = True
         
-    if player_rect.y >= 230:
-        removeTiles(-50)
-        if death_count < 1:
-            damage_sound.play()
         
 
     if  player_rect.y >= 200:
+        damage_sound.play()
+        removeTiles(100)
         player_rect.x = position_fall[0]
         player_rect.y = position_fall[1]-30
         air_timer = 0
         death_count += 1
         
     def removeTiles(n):
-        while(n < 20):
-            a = random.randint(5, 11)
-            b = random.randint(1, 80)
-            # print(a, b)
+        while(n != 0):
+            a = random.randint(1, rows-2)
+            b = random.randint(1, columns-2)
+            #print(a, b)
             game_map[a][b] = '0'
-            n+=1
+            n -= 1
 
     # Loop para repetir el frame inicial
     player_frame += 1
@@ -304,7 +313,7 @@ while GAME_ON:  # Loop del Juego
             sys.exit()  # Detiene el script
         if event.type == KEYDOWN:
             if event.key == K_z:
-                removeTiles(-20)
+                removeTiles( 100 )
             if event.key == K_w:
                 pygame.mixer.music.fadeout(1000)
             if event.key == K_e:
